@@ -4,6 +4,8 @@ import { requireAdmin } from "@/utils/auth";
 import { formatDate, hasModel, kindLabel, usesAI } from "@/utils/steps";
 import { deleteChain } from "../actions";
 import { DeleteButton } from "../delete-button";
+import { generatePlan } from "./generate/actions";
+import { GenerateForm } from "./generate/generate-form";
 import { deleteStep, moveStep } from "./steps/actions";
 import { DeleteStepButton } from "./steps/delete-step-button";
 
@@ -62,12 +64,18 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
           {saved && <p className="mt-3 text-sm text-accent">Saved.</p>}
           {moveError && <p className="mt-3 text-sm text-down">Couldn&apos;t move that step. Try again.</p>}
         </div>
-        <Link
-          href={`/chains/${chain.id}/edit`}
-          className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink hover:bg-card"
-        >
-          Edit name and description
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {/* Jumps to the Generate section at the bottom */}
+          <a href="#generate" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90">
+            Generate a plan
+          </a>
+          <Link
+            href={`/chains/${chain.id}/edit`}
+            className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink hover:bg-card"
+          >
+            Edit name and description
+          </Link>
+        </div>
       </div>
 
       <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
@@ -158,6 +166,12 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
           </table>
         </div>
       )}
+
+      <section id="generate" className="mt-12 scroll-mt-6">
+        <h2 className="font-serif text-2xl text-ink">Generate a plan</h2>
+        <p className="mt-2 mb-4 text-sm text-ink-soft">Runs this chain&apos;s steps in order, like OutNYC does when someone makes a plan.</p>
+        <GenerateForm action={generatePlan.bind(null, chain.id)} />
+      </section>
 
       <section className="mt-12 border-t border-line pt-6">
         <h2 className="font-serif text-2xl text-ink">Delete</h2>
