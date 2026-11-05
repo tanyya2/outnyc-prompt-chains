@@ -26,6 +26,8 @@ type Chain = {
   name: string;
   description: string | null;
   prompt_chain_steps: Step[];
+  // The request log: each run with this chain, and the plan it saved (if any)
+  generation_requests: { plan_id: number | null }[];
 };
 
 // One chain: what it is, and its steps in order (add, edit, delete, move)
@@ -38,7 +40,7 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
   const { data, error } = await supabase
     .from("prompt_chains")
     .select(
-      "id, created_at, name, description, prompt_chain_steps(id, step_order, name, kind, instructions, prompt_text, temperature, llm_models(name, label))",
+      "id, created_at, name, description, prompt_chain_steps(id, step_order, name, kind, instructions, prompt_text, temperature, llm_models(name, label)), generation_requests(plan_id)",
     )
     .eq("id", Number(id))
     .maybeSingle();
@@ -49,6 +51,7 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
 
   const chain = data as unknown as Chain;
   const steps = [...chain.prompt_chain_steps].sort((a, b) => a.step_order - b.step_order);
+  const planCount = new Set(chain.generation_requests.flatMap((request) => (request.plan_id ? [request.plan_id] : []))).size;
 
   return (
     <main className="mx-auto w-full max-w-screen-2xl px-6 py-6">
@@ -69,6 +72,12 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
           <a href="#generate" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90">
             Generate a plan
           </a>
+          <Link
+            href={`/chains/${chain.id}/plans`}
+            className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink hover:bg-card"
+          >
+            Plans made ({planCount})
+          </Link>
           <Link
             href={`/chains/${chain.id}/edit`}
             className="rounded-full border border-line-strong px-5 py-2.5 text-sm text-ink hover:bg-card"
