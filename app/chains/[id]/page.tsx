@@ -4,6 +4,8 @@ import { requireAdmin } from "@/utils/auth";
 import { formatDate, hasModel, kindLabel, usesAI } from "@/utils/steps";
 import { deleteChain } from "../actions";
 import { DeleteButton } from "../delete-button";
+import { deleteStep, moveStep } from "./steps/actions";
+import { DeleteStepButton } from "./steps/delete-step-button";
 
 type Step = {
   id: number;
@@ -24,11 +26,11 @@ type Chain = {
   prompt_chain_steps: Step[];
 };
 
-// One chain: what it is and its steps in order (read only for now)
+// One chain: what it is, and its steps in order (add, edit, delete, move)
 export default async function ChainPage({ params, searchParams }: PageProps<"/chains/[id]">) {
   const { supabase } = await requireAdmin();
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, moveError } = await searchParams;
   if (!/^\d+$/.test(id)) notFound();
 
   const { data, error } = await supabase
@@ -58,6 +60,7 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
           <h1 className="mt-2 font-serif text-4xl text-ink">{chain.name}</h1>
           {chain.description && <p className="mt-2 max-w-2xl text-sm text-ink-soft">{chain.description}</p>}
           {saved && <p className="mt-3 text-sm text-accent">Saved.</p>}
+          {moveError && <p className="mt-3 text-sm text-down">Couldn&apos;t move that step. Try again.</p>}
         </div>
         <Link
           href={`/chains/${chain.id}/edit`}
@@ -67,14 +70,22 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
         </Link>
       </div>
 
-      <h2 className="mt-10 font-serif text-2xl text-ink">
-        {steps.length} {steps.length === 1 ? "step" : "steps"}
-      </h2>
+      <div className="mt-10 flex flex-wrap items-end justify-between gap-4">
+        <h2 className="font-serif text-2xl text-ink">
+          {steps.length} {steps.length === 1 ? "step" : "steps"}
+        </h2>
+        <Link
+          href={`/chains/${chain.id}/steps/new`}
+          className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90"
+        >
+          Add step
+        </Link>
+      </div>
       {steps.length === 0 ? (
         <p className="mt-3 text-sm text-ink-soft">No steps yet.</p>
       ) : (
         <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-card">
-          <table className="w-full min-w-[900px] text-left text-sm">
+          <table className="w-full min-w-[1100px] text-left text-sm">
             <thead className="border-b border-line text-xs uppercase tracking-widest text-muted">
               <tr>
                 <th className="px-5 py-3 font-medium">Step</th>
@@ -84,6 +95,8 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
                 <th className="px-5 py-3 font-medium">Model</th>
                 <th className="px-5 py-3 font-medium">Temperature</th>
                 <th className="px-5 py-3 font-medium">Prompt / what it does</th>
+                <th className="px-5 py-3 font-medium">Order</th>
+                <th className="px-5 py-3 font-medium" />
               </tr>
             </thead>
             <tbody>
@@ -108,6 +121,36 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
                     ) : (
                       (step.instructions ?? "—")
                     )}
+                  </td>
+                  <td className="px-5 py-3">
+                    <div className="flex gap-1">
+                      <form action={moveStep.bind(null, chain.id, step.id, "up")}>
+                        <button
+                          disabled={i === 0}
+                          aria-label={`Move ${step.name} up`}
+                          className="size-8 rounded-full border border-line-strong text-ink hover:bg-paper disabled:opacity-30"
+                        >
+                          ↑
+                        </button>
+                      </form>
+                      <form action={moveStep.bind(null, chain.id, step.id, "down")}>
+                        <button
+                          disabled={i === steps.length - 1}
+                          aria-label={`Move ${step.name} down`}
+                          className="size-8 rounded-full border border-line-strong text-ink hover:bg-paper disabled:opacity-30"
+                        >
+                          ↓
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3">
+                    <div className="flex items-center gap-3 whitespace-nowrap">
+                      <Link href={`/chains/${chain.id}/steps/${step.id}/edit`} className="text-sm text-ink hover:underline">
+                        Edit
+                      </Link>
+                      <DeleteStepButton action={deleteStep.bind(null, chain.id, step.id)} name={step.name} />
+                    </div>
                   </td>
                 </tr>
               ))}
