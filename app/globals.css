@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Light only: dark: classes apply only under a .dark class, which nothing sets */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* OutNYC colors: a light beige page, near-black ink, one deep green accent */
+@theme inline {
+  --color-paper: #f3eee4;
+  --color-card: #fbf8f2;
+  --color-ink: #1c1b19;
+  --color-ink-soft: #45413a;
+  --color-muted: #5f5a50;
+  --color-line: #d9d1c1;
+  --color-line-strong: #cfc6b4;
+  --color-accent: #1e5a43;
+  /* 👎 and errors: warm rust, tells apart from the green even with color blindness */
+  --color-down: #b8613a;
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-newsreader);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
