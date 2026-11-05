@@ -13,7 +13,8 @@ export async function Nav() {
         <Link href="/" className="font-serif text-xl text-ink">
           OutNYC <span className="text-muted">Prompt Chains</span>
         </Link>
-        <form action={signOut} className="ml-auto">
+        <span className="ml-auto text-sm text-muted">{viewer.user.email}</span>
+        <form action={signOut}>
           <button className="rounded-full border border-line-strong px-4 py-1.5 text-sm text-ink hover:bg-paper">
             Sign out
           </button>
