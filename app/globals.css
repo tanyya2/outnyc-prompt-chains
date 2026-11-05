@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
-/* Light only: dark: classes apply only under a .dark class, which nothing sets */
-@custom-variant dark (&:where(.dark, .dark *));
+/* dark: classes follow the theme switch (data-theme on <html>, set by the script in layout.tsx) */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* OutNYC colors: a light beige page, near-black ink, one deep green accent */
-@theme inline {
+/* OutNYC colors: a light beige page, near-black ink, one deep green accent.
+   Not inline, so the dark theme below can swap them. */
+@theme {
   --color-paper: #f3eee4;
   --color-card: #fbf8f2;
   --color-ink: #1c1b19;
@@ -13,10 +14,31 @@
   --color-line: #d9d1c1;
   --color-line-strong: #cfc6b4;
   --color-accent: #1e5a43;
+  /* Text on accent (and on rust) buttons */
+  --color-on-accent: #ffffff;
   /* 👎 and errors: warm rust, tells apart from the green even with color blindness */
   --color-down: #b8613a;
+}
+
+@theme inline {
   --font-sans: var(--font-inter);
   --font-serif: var(--font-newsreader);
+}
+
+/* Dark: the same warm palette at night. The accent is a lighter green with dark
+   text on it, so buttons and green text stay readable on the dark page. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #171513;
+  --color-card: #211e1b;
+  --color-ink: #f1ece2;
+  --color-ink-soft: #d0c9bc;
+  --color-muted: #a39c8f;
+  --color-line: #3a352f;
+  --color-line-strong: #4a443c;
+  --color-accent: #6cc497;
+  --color-on-accent: #14110f;
+  --color-down: #e08a63;
 }
 
 body {

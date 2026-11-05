@@ -55,7 +55,7 @@ function Form({ action, initial, copyable, submitLabel }: Props) {
       {state?.error && <p className="text-sm text-down">{state.error}</p>}
       <button
         disabled={pending}
-        className="self-start rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-white hover:bg-accent/90 disabled:opacity-60"
+        className="self-start rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90 disabled:opacity-60"
       >
         {pending ? "Saving…" : submitLabel}
       </button>

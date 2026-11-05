@@ -69,7 +69,7 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
         </div>
         <div className="flex flex-wrap gap-2">
           {/* Jumps to the Generate section at the bottom */}
-          <a href="#generate" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90">
+          <a href="#generate" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90">
             Generate a plan
           </a>
           <Link
@@ -93,7 +93,7 @@ export default async function ChainPage({ params, searchParams }: PageProps<"/ch
         </h2>
         <Link
           href={`/chains/${chain.id}/steps/new`}
-          className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90"
+          className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90"
         >
           Add step
         </Link>

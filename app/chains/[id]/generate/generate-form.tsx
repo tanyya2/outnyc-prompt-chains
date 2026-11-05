@@ -70,7 +70,7 @@ export function GenerateForm({ action }: Props) {
           </label>
           <button
             disabled={pending}
-            className="rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-white hover:bg-accent/90 disabled:opacity-60"
+            className="rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90 disabled:opacity-60"
           >
             {pending ? "Generating… (up to a minute)" : "Generate"}
           </button>

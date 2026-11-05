@@ -15,7 +15,7 @@ export function SignInButton() {
   return (
     <button
       onClick={signIn}
-      className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white hover:bg-accent/90"
+      className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-on-accent hover:bg-accent/90"
     >
       Sign in with Google
     </button>

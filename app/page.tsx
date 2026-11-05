@@ -30,7 +30,7 @@ export default async function ChainsPage({ searchParams }: PageProps<"/">) {
           </h1>
           <p className="mt-2 text-sm text-ink-soft">Each chain is a list of steps for turning someone&apos;s request into a plan.</p>
         </div>
-        <Link href="/chains/new" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white hover:bg-accent/90">
+        <Link href="/chains/new" className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-on-accent hover:bg-accent/90">
           New chain
         </Link>
       </div>

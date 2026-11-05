@@ -23,7 +23,7 @@ export function DeleteButton({ action, steps }: Props) {
     >
       <button
         disabled={pending}
-        className="self-start rounded-full border border-down px-5 py-2.5 text-sm font-medium text-down hover:bg-down hover:text-white disabled:opacity-60"
+        className="self-start rounded-full border border-down px-5 py-2.5 text-sm font-medium text-down hover:bg-down hover:text-on-accent disabled:opacity-60"
       >
         {pending ? "Deleting…" : "Delete chain"}
       </button>
